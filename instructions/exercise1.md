@@ -153,5 +153,3 @@ Tu solución será evaluada contra los siguientes puntos. Asegúrate de cubrirlo
 Cuando termines:
 
 1. Asegúrate de que `php artisan migrate:fresh && php artisan serve` corra sin errores.
-2. Incluye en tu `README.md` una breve explicación de los problemas que encontraste y cómo los resolviste.
-3. Entrega el proyecto como repositorio Git (ZIP o enlace).

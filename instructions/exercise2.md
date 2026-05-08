@@ -240,5 +240,4 @@ Las factories `ConsultaFactory`, `VeterinarioFactory`, `PropietarioFactory` y `M
 Cuando termines:
 
 1. Asegúrate de que `php artisan migrate:fresh && php artisan test` corra sin errores.
-2. En tu `README.md` documenta las decisiones de diseño: por qué separaste en Repository/Service, cómo implementaste el Strategy y qué cubriste en los tests.
-3. Entrega el proyecto como repositorio Git (ZIP o enlace).
+2. haz push de tus cambios a tu fork
