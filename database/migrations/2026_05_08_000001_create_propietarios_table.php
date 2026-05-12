@@ -9,14 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('propietarios', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('nombre');
             $table->string('apellido');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('telefono')->nullable();
             $table->text('direccion')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
+
+
 
     public function down(): void
     {
