@@ -14,9 +14,12 @@ return new class extends Migration
             $table->string('apellido');
             $table->string('especialidad');
             $table->string('numero_colegiado');
-            $table->string('email');
+            $table->string('email')->unique();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
+
 
     public function down(): void
     {

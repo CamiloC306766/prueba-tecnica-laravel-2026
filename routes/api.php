@@ -16,11 +16,11 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('consultas')->controller(ExerciseIntermediateController::class)->group(function () {
         // Ejercicio 2 — CRUD de consultas
-        Route::get('/por-estado/{estado}', 'porEstado');
+        // Route::get('/por-estado/{estado}', 'porEstado');
         Route::get('/',                     'index');
         Route::post('/',                    'store');
-        Route::get('/{id}',                'show');
-        Route::put('/{id}',                'update');
-        Route::delete('/{id}',             'destroy');
+        Route::get('/{consulta}',                'show');
+        Route::put('/{consulta}',                'update');
+        Route::delete('/{consulta}',             'destroy');
         });
     });

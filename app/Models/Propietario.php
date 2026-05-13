@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Propietario extends Model
@@ -22,7 +23,7 @@ class Propietario extends Model
         'id'
     ];
 
-    public function mascotas()
+    public function mascotas(): HasMany
     {
         return $this->hasMany(Mascota::class);
     }

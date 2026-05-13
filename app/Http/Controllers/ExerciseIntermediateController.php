@@ -5,96 +5,56 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Consulta;
 use App\Notificadores\MailNotificador;
+use App\Http\Services\ConsultaService;
+use App\Http\Requests\Consulta\StoreConsultaRequest;
+use App\Http\Requests\Consulta\UpdateConsultaRequest;
+use App\Http\Resources\ConsultaResource;
 
 class ExerciseIntermediateController extends Controller
 {
-    public function index()
+    protected $consultaService;
+
+    public function __construct(ConsultaService $consultaService)
     {
-        $consultas = Consulta::all();
-
-        $resultado = [];
-        foreach ($consultas as $consulta) {
-            $resultado[] = [
-                'id' => $consulta->id,
-                'fecha' => $consulta->fecha_consulta,
-                'motivo' => $consulta->motivo,
-                'estado' => $consulta->estado,
-                'mascota' => $consulta->mascota->nombre,
-                'veterinario' => $consulta->veterinario->nombre,
-                'tratamientos' => $consulta->tratamientos->count(),
-            ];
-        }
-
-        return response()->json($resultado);
+        $this->consultaService = $consultaService;
     }
 
-    public function store(Request $request)
+    public function index(Request $request)
     {
-        $request->validate([
-            'mascota_id' => 'required|exists:mascotas,id',
-            'veterinario_id' => 'required|exists:veterinarios,id',
-            'motivo' => 'required|string',
-            'fecha_consulta' => 'required|date',
-        ]);
+        $estado = $request->query('estado');
 
-        $consulta = new Consulta();
-        $consulta->mascota_id = $request->mascota_id;
-        $consulta->veterinario_id = $request->veterinario_id;
-        $consulta->motivo = $request->motivo;
-        $consulta->fecha_consulta = $request->fecha_consulta;
-        $consulta->estado = 'pendiente';
-        $consulta->save();
+        $resultado = $this->consultaService->getConsultas($estado);
 
-        $notificador = new MailNotificador();
-        $notificador->notificar($consulta);
-
-        return response()->json($consulta->toArray(), 201);
+        return response()->json(ConsultaResource::collection($resultado));
     }
 
-    public function show($id)
+    public function store(StoreConsultaRequest $request)
     {
-        $consulta = Consulta::find($id);
-
-        if (!$consulta) {
-            abort(404, 'Consulta no encontrada');
-        }
-
-        return response()->json($consulta->toArray());
+       
+        $consulta = $this->consultaService->createConsulta($request->validated());
+        return response()->json(ConsultaResource::make($consulta), 201);
     }
 
-    public function update(Request $request, $id)
+    public function show(Consulta $consulta)
     {
-        $consulta = Consulta::find($id);
+        $consulta = $this->consultaService->getOneConsulta($consulta);
 
-        if (!$consulta) {
-            abort(404);
-        }
-
-        $consulta->fill($request->all());
-        $consulta->save();
-
-        (new MailNotificador())->notificar($consulta);
-
-        return response()->json($consulta);
+        return response()->json(ConsultaResource::make($consulta));
     }
 
-    public function destroy($id)
+    public function update(UpdateConsultaRequest $request, Consulta $consulta)
     {
-        $consulta = Consulta::find($id);
+        $consulta = $this->consultaService->updateConsulta($consulta, $request->validated());
 
-        if (!$consulta) {
-            abort(404);
-        }
+        return response()->json(ConsultaResource::make($consulta));
+    }
 
-        $consulta->delete();
+    public function destroy(Consulta $consulta)
+    {
+        $consulta = $this->consultaService->deleteConsulta($consulta);
 
         return response()->json(null, 204);
     }
 
-    public function porEstado($estado)
-    {
-        $consultas = \DB::select("SELECT * FROM consultas WHERE estado = '$estado'");
-
-        return response()->json($consultas);
-    }
+    
 }

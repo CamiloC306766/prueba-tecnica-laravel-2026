@@ -10,15 +10,24 @@ return new class extends Migration
     {
         Schema::create('consultas', function (Blueprint $table) {
             $table->id();
-            $table->integer('mascota_id');
-            $table->integer('veterinario_id');
+            $table->foreignId('mascota_id')
+                ->constrained('mascotas')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreignId('veterinario_id')
+                ->constrained('veterinarios')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('motivo');
             $table->text('diagnostico')->nullable();
-            $table->string('estado', 20);
+            $table->enum('estado', ['pendiente', 'en_progreso', 'completada', 'cancelada']);
             $table->date('fecha_consulta');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
+
+
 
     public function down(): void
     {

@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            PropietarioMascotaSeeder::class
+            PropietarioMascotaSeeder::class,
+            ConsultaTratamientoVet::class,
             ]);
     }
 }
